@@ -27,6 +27,7 @@ while cap.isOpened():
     print(results)
     if results.detections:
         for id, detection in enumerate(results.detections):
+            mpDraw.draw_detection(img, detection)
             print(id, detection)
 
     cTime = time.time()
