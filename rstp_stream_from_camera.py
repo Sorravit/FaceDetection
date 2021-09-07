@@ -2,6 +2,7 @@ import time
 
 import cv2
 import os
+import mediapipe as mp
 
 from dotenv import load_dotenv
 
@@ -10,16 +11,30 @@ rtsp_username = os.environ.get('rtspUsername')
 rtsp_password = os.environ.get('rtspPassword')
 rtsp_address = os.environ.get('rtspAddress')
 
-cap = cv2.VideoCapture("rtsp://{}:{}@{}".format(rtsp_username, rtsp_password, rtsp_address))
-# cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture("rtsp://{}:{}@{}".format(rtsp_username, rtsp_password, rtsp_address))
+cap = cv2.VideoCapture(0)
 pTime = 0
+
+mpFaceDetection = mp.solutions.face_detection
+mpDraw = mp.solutions.drawing_utils
+faceDetection = mpFaceDetection.FaceDetection()
+
 while cap.isOpened():
-    ret, frame = cap.read()
+    success, img = cap.read()
+
+    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    results = faceDetection.process(imgRGB)
+    print(results)
+    if results.detections:
+        for id, detection in enumerate(results.detections):
+            print(id, detection)
+
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    cv2.putText(frame, f'FPS:{int(fps)}', (20, 70), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 255, 255), 2)
-    cv2.imshow('frame', frame)
+
+    cv2.putText(img, f'FPS:{int(fps)}', (20, 70), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 255, 255), 2)
+    cv2.imshow('frame', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cap.release()
