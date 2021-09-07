@@ -17,7 +17,7 @@ pTime = 0
 
 mpFaceDetection = mp.solutions.face_detection
 mpDraw = mp.solutions.drawing_utils
-faceDetection = mpFaceDetection.FaceDetection()
+faceDetection = mpFaceDetection.FaceDetection(0.75)
 
 while cap.isOpened():
     success, img = cap.read()
