@@ -27,8 +27,11 @@ while cap.isOpened():
     print(results)
     if results.detections:
         for id, detection in enumerate(results.detections):
-            mpDraw.draw_detection(img, detection)
-            print(id, detection)
+            # mpDraw.draw_detection(img, detection)
+            bboxC = detection.location_data.relative_bounding_box
+            ih, iw, ic = img.shape
+            bbox = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih),
+            cv2.rectangle(img, bbox, (0, 255, 123), 2)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
