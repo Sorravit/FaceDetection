@@ -1,11 +1,18 @@
 import cv2
-# cap = cv2.VideoCapture("rtsp://localhost:554/mystream")
+import os
 
-cap = cv2.VideoCapture(0)
-while(cap.isOpened()):
+from dotenv import load_dotenv
+
+load_dotenv()
+rtsp_username = os.environ.get('rtspUsername')
+rtsp_password = os.environ.get('rtspPassword')
+rtsp_address = os.environ.get('rtspAddress')
+cap = cv2.VideoCapture("rtsp://{}:{}@{}".format(rtsp_username, rtsp_password, rtsp_address))
+# cap = cv2.VideoCapture(0)
+while (cap.isOpened()):
     ret, frame = cap.read()
     cv2.imshow('frame', frame)
-    if cv2.waitKey(20) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cap.release()
 cv2.destroyAllWindows()
